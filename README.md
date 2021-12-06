@@ -1,0 +1,1 @@
+# snipet-k8-graceful-shutdown
