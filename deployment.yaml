@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-graceful-shutdown
+  namespace: test-c
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: go-graceful-shutdown
+  template:
+    metadata:
+      labels:
+        app: go-graceful-shutdown
+        version: "graceful-shutdown"
+    spec:
+      containers:
+      - name: go-graceful-shutdown
+        imagePullPolicy: Never
+        image: go_http_server_mock_sig
+        #image: go_http_server_mock_wsig
+        resources:
+           requests:
+             cpu: 250m
+             memory: 10Mi
+           limits:
+             cpu: 500m
+             memory: 20Mi
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PORT
+          value: ":8000"
+        - name: NAME_POD
+          value: "pod-graceful-shutdown-sig1"
+          #value: "pod-graceful-shutdown-wsig1"
+      terminationGracePeriodSeconds: 60
